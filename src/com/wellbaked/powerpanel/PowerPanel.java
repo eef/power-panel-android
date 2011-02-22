@@ -1,17 +1,22 @@
 package com.wellbaked.powerpanel;
 
-// Android SDK Imports
-import android.app.Activity;
-import android.content.Intent;
+import android.app.ListActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 // Java SDK Imports
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-public class PowerPanel extends Activity {
+public class PowerPanel extends ListActivity {
 	
 	// Creation of variable which will be used
 	private Dispatcher dispatcher;
@@ -19,15 +24,21 @@ public class PowerPanel extends Activity {
 	HashMap<String, Integer> tvList = new HashMap<String, Integer>();
 	public static final int SCAN = Menu.FIRST + 1; // Scan For Computers Menu Item
 	public static final int PURGE_DB = Menu.FIRST + 2; // Purge Database Menu Item
+	public String[] mockItems = {"Computer 1", "Computer 2", "Computer 3"};
+	public HashMap<String, String> allComputers;
+	public String[] listItems;
 	
 	// Override the oncreate method of the extended Activity
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
 		setContentView(R.layout.main);
 		
 		// The creation of the dispatcher, all UI events will call this
 		createDispatcher();
+		
+		// Create the string array of computers
+		listItems = listItems();
 		
 		// Create a list of text view objects which will be interacted with
 		tvs();
@@ -37,6 +48,9 @@ public class PowerPanel extends Activity {
 		
 		// Testing get computer count
 		computerCount();
+		
+		// Make the call to display the list
+		listSetup();
 		
     }
 	
@@ -89,5 +103,46 @@ public class PowerPanel extends Activity {
 	private void mockComputers() {
 		dispatcher.addComputer("98sdua9s8du", "aosdahsodad", "aosdhaosd", "asudahsd", "asodasdd", "asdasd");
 		dispatcher.addComputer("98sds8du", "ahsodad", "aosd", "ahsd", "asdd", "ad");
+	}
+	
+	// Class to create the list of computers on screen
+	class IconicAdapter extends ArrayAdapter {
+		IconicAdapter() {
+			super(PowerPanel.this, R.layout.row, listItems);
+		}
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LayoutInflater inflater = getLayoutInflater();
+			View row = inflater.inflate(R.layout.row, null);
+			TextView label = (TextView) row.findViewById(R.id.label);
+			TextView status_label = (TextView) row.findViewById(R.id.status_label);
+			label.setText(listItems[position]);
+			status_label.setText("Paired");
+			return (row);
+		}
+	}
+	
+	// This is called to setup the list
+	private void listSetup() {
+		setListAdapter(new IconicAdapter());
+		registerForContextMenu(getListView());
+	}
+	
+	// Map the returned hash map from selecting all the computers into a array of keys
+	// We can the reference the allcomputers hash went we perform actions
+	private String[] listItems() {
+		allComputers = dispatcher.getComputerList();
+		String[] items = new String[allComputers.size()];
+		Set comps = allComputers.entrySet();
+		Iterator compsIterator = comps.iterator();
+		int i = 0;
+		while(compsIterator.hasNext()){
+		    Map.Entry<String, String> mapping = (Map.Entry) compsIterator.next();
+		    items[i] = mapping.getKey().toString();
+		    i++;
+		}
+		System.out.println("=========== ITEMS");
+		System.out.println(items);
+		return items;
 	}
 }

@@ -7,9 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class Store {
 
@@ -45,15 +43,15 @@ public class Store {
    }
    
 
-   public List<String> selectAll() {
-      List<String> list = new ArrayList<String>();
-      Log.e("Database Itr", "In method");
-      Cursor cursor = this.db.query(TABLE_NAME, new String[] { "name, pkey, last_ip, mac" }, 
-        null, null, null, null, "name desc");
+   public HashMap<String, String> selectAll() {
+      HashMap<String, String> list = new HashMap<String, String>();
+      Cursor cursor = this.db.query(TABLE_NAME, new String[] { "private_key, mac_address, host_name, os_info, display_name, last_ip" }, 
+        null, null, null, null, "host_name desc");
       if (cursor.moveToFirst()) {
          do {
-            list.add(cursor.getString(2));
-            Log.e("Database Itr", cursor.getString(0) + cursor.getString(1) + cursor.getString(2) + cursor.getString(3));
+        	 System.out.println(cursor.getString(0));
+        	 System.out.println(cursor.getString(2));
+        	 list.put(cursor.getString(0), cursor.getString(2));
          } while (cursor.moveToNext());
       }
       if (cursor != null && !cursor.isClosed()) {

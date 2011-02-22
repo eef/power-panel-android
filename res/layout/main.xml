@@ -6,4 +6,10 @@
     >
     <TextView android:text="Computer Count" android:id="@+id/computer_count" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
     <TextView android:text="Status" android:id="@+id/status" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    <ListView
+			android:id="@android:id/list"
+			android:layout_width="fill_parent" 
+			android:layout_height="fill_parent"
+			android:drawSelectorOnTop="false">
+		</ListView>
 </LinearLayout>
