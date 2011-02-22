@@ -2,20 +2,23 @@ package com.wellbaked.powerpanel;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.widget.TextView;
 
 public class PowerPanel extends Activity {
-    
-    @Override
+	
+	private Dispatcher dispatcher;
+	TextView computer_count;
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        createDispatcher();
+        dispatcher.testMethod();
     }
     
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-    	// Doing some testing on super classes
-    	System.out.println("=======================");
-    	System.out.println(event.getDisplayLabel());
-    	return true;
-    }
+	// Method to create an instance of the dispatcher class
+	private void createDispatcher() {
+		dispatcher = new Dispatcher(this);
+	}
+	
 }
