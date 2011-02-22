@@ -20,5 +20,9 @@ public class Dispatcher extends PowerPanel {
 		System.out.println("Result of adding computer");
 		System.out.println(Long.toString(result));
 	}
+	
+	public void purgeDB() {
+		store.deleteAll();
+	}
 
 }

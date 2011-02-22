@@ -2,7 +2,10 @@ package com.wellbaked.powerpanel;
 
 // Android SDK Imports
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 // Java SDK Imports
@@ -14,6 +17,8 @@ public class PowerPanel extends Activity {
 	private Dispatcher dispatcher;
 	TextView text_view;
 	HashMap<String, Integer> tvList = new HashMap<String, Integer>();
+	public static final int SCAN = Menu.FIRST + 1; // Scan For Computers Menu Item
+	public static final int PURGE_DB = Menu.FIRST + 2; // Purge Database Menu Item
 	
 	// Override the oncreate method of the extended Activity
 	@Override
@@ -34,6 +39,28 @@ public class PowerPanel extends Activity {
 		computerCount();
 		
     }
+	
+	// Create menu
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(0, SCAN, 0, "Scan");
+		menu.add(0, PURGE_DB, 0, "Purge DB");
+		return true;
+	}
+	
+	// Menu select actions
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case SCAN:
+			updateTextView("status", "Scan started");
+			return true;
+		case PURGE_DB:
+			dispatcher.purgeDB();
+			computerCount();
+			updateTextView("status", "Purged Database");
+			return true;
+		}
+		return false;
+	}
     
 	// Method to create an instance of the dispatcher class
 	private void createDispatcher() {
@@ -43,9 +70,10 @@ public class PowerPanel extends Activity {
 	// We created a hash map of view objects.  String => Integer
 	private void tvs() {
 		tvList.put("computer_count", R.id.computer_count);
+		tvList.put("status", R.id.status);
 	}
 	
-	// Update the choosen object, accepts a string which is used to pull the correct value from the actionList<String, Integer>
+	// Update the choosen object, accepts a string which is used to pull the correct value from the tvList<String, Integer>
 	private void updateTextView(String tv, String messege) {
 		text_view = (TextView)findViewById(tvList.get(tv));
 		text_view.setText(messege);
