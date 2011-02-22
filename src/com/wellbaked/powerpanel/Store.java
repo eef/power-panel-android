@@ -21,7 +21,7 @@ public class Store {
    private SQLiteDatabase db;
 
    private SQLiteStatement insertStmt;
-   private static final String INSERT = "insert into " + TABLE_NAME + "(private_key, mac_address, host_name, os_info, display_name, last_ip) values (?, ?, ?, ?, ?)";
+   private static final String INSERT = "insert into " + TABLE_NAME + "(private_key, mac_address, host_name, os_info, display_name, last_ip) values (?, ?, ?, ?, ?, ?)";
 
    public Store(Context context) {
       this.context = context;
@@ -29,12 +29,14 @@ public class Store {
       this.db = openHelper.getWritableDatabase();
    }
 
-   public long insert(String name, String pkey, String ip, String mac) {
+   public long insert(String private_key, String mac_address, String host_name, String os_info, String display_name, String last_ip) {
 	  this.insertStmt = this.db.compileStatement(INSERT);
-      this.insertStmt.bindString(1, name);
-      this.insertStmt.bindString(2, pkey);
-      this.insertStmt.bindString(3, ip);
-      this.insertStmt.bindString(4, mac);
+      this.insertStmt.bindString(1, private_key);
+      this.insertStmt.bindString(2, mac_address);
+      this.insertStmt.bindString(3, host_name);
+      this.insertStmt.bindString(4, os_info);
+      this.insertStmt.bindString(5, display_name);
+      this.insertStmt.bindString(6, last_ip);
       return this.insertStmt.executeInsert();
    }
 
@@ -58,6 +60,11 @@ public class Store {
          cursor.close();
       }
       return list;
+   }
+   
+   public String computerCount() {
+	   SQLiteStatement count_statement = this.db.compileStatement("SELECT count(*) FROM " + TABLE_NAME);
+	   return count_statement.simpleQueryForString();
    }
 
    private static class OpenHelper extends SQLiteOpenHelper {
