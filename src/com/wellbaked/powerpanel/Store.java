@@ -49,8 +49,6 @@ public class Store {
         null, null, null, null, "host_name desc");
       if (cursor.moveToFirst()) {
          do {
-        	 System.out.println(cursor.getString(0));
-        	 System.out.println(cursor.getString(2));
         	 list.put(cursor.getString(0), cursor.getString(2));
          } while (cursor.moveToNext());
       }

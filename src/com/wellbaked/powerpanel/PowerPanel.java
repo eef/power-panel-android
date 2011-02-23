@@ -98,11 +98,16 @@ public class PowerPanel extends ListActivity {
 		String cc = dispatcher.computerCount();
 		updateTextView("computer_count", "Stored Computers: " + cc);
 	}
-	
-	// Add some mock data, this will generally be called
+	/*
+	Add some mock data, this will generally be called
+	This is the structure we want to insert into the database.
+	The network class would ideally check for computers in the database, update the computer if found or create a new computer if its not
+	*/
 	private void mockComputers() {
-		dispatcher.addComputer("98sdua9s8du", "aosdahsodad", "aosdhaosd", "asudahsd", "asodasdd", "asdasd");
-		dispatcher.addComputer("98sds8du", "ahsodad", "aosd", "ahsd", "asdd", "ad");
+		dispatcher.addComputer("a", "aosdahsodad", "aosdhaosd", "asudahsd", "asodasdd", "asdasd");
+		dispatcher.addComputer("b", "ahsodad", "aosd", "ahsd", "asdd", "ad");
+		dispatcher.addComputer("c", "ahsodad", "aosd", "ahsd", "asdd", "ad");
+		dispatcher.addComputer("d", "ahsodad", "aosd", "ahsd", "asdd", "ad");
 	}
 	
 	// Class to create the list of computers on screen
@@ -110,7 +115,7 @@ public class PowerPanel extends ListActivity {
 		IconicAdapter() {
 			super(PowerPanel.this, R.layout.row, listItems);
 		}
-
+		
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = getLayoutInflater();
 			View row = inflater.inflate(R.layout.row, null);
@@ -141,8 +146,6 @@ public class PowerPanel extends ListActivity {
 		    items[i] = mapping.getKey().toString();
 		    i++;
 		}
-		System.out.println("=========== ITEMS");
-		System.out.println(items);
 		return items;
 	}
 }
