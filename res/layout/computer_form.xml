@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="vertical"
+    android:background="#000000"  >
+    <ScrollView android:id="@+id/scrollView1" android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <TableLayout android:id="@+id/tableLayout1" android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+    private_key, mac_address, host_name, os_info, display_name, last_ip
+    <TableRow android:layout_height="fill_parent" android:layout_width="wrap_content" android:padding="5px" android:id="@+id/tableRow1">
+        <TextView android:text="Display Name" android:id="@+id/display_name_label" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    </TableRow>
+    <TableRow android:layout_height="fill_parent" android:padding="5px" android:id="@+id/tableRow2" android:layout_width="match_parent">
+        <EditText android:inputType="text" android:hint="eg. home pc" android:id="@+id/display_name_input" android:layout_height="wrap_content" android:layout_width="fill_parent"></EditText>
+    </TableRow>
+    
+    <TableRow android:layout_height="fill_parent" android:layout_width="wrap_content" android:padding="5px" android:id="@+id/tableRow1">
+        <TextView android:text="Hostname" android:id="@+id/hostname_label" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    </TableRow>
+    <TableRow android:layout_height="fill_parent" android:padding="5px" android:id="@+id/tableRow2" android:layout_width="match_parent">
+        <EditText android:inputType="text" android:hint="" android:id="@+id/hostname_input" android:layout_height="wrap_content" android:layout_width="fill_parent"></EditText>
+    </TableRow>
+    
+    <TableRow android:layout_height="fill_parent" android:layout_width="wrap_content" android:padding="5px" android:id="@+id/tableRow1">
+        <TextView android:text="IP Address" android:id="@+id/last_ip_label" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    </TableRow>
+    <TableRow android:layout_height="fill_parent" android:padding="5px" android:id="@+id/tableRow2" android:layout_width="match_parent">
+        <EditText android:inputType="text" android:hint="eg. 192.168.1.1" android:id="@+id/last_ip" android:layout_height="wrap_content" android:layout_width="fill_parent"></EditText>
+    </TableRow>
+    
+    <TableRow android:layout_height="fill_parent" android:layout_width="wrap_content" android:padding="5px" android:id="@+id/tableRow1">
+        <TextView android:text="Private Key" android:id="@+id/private_key_label" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    </TableRow>
+    <TableRow android:layout_height="fill_parent" android:padding="5px" android:id="@+id/tableRow2" android:layout_width="match_parent">
+        <EditText android:inputType="text" android:hint="" android:id="@+id/private_key_input" android:layout_height="wrap_content" android:layout_width="fill_parent"></EditText>
+    </TableRow>
+    
+    <TableRow android:layout_height="fill_parent" android:layout_width="wrap_content" android:padding="5px" android:id="@+id/tableRow1">
+        <TextView android:text="MAC Address" android:id="@+id/mac_address_label" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    </TableRow>
+    <TableRow android:layout_height="fill_parent" android:padding="5px" android:id="@+id/tableRow2" android:layout_width="match_parent">
+        <EditText android:inputType="text" android:hint="eg. c4:cb:d8:46:22:c4" android:id="@+id/mac_address_input" android:layout_height="wrap_content" android:layout_width="fill_parent"></EditText>
+    </TableRow>
+    
+		</TableLayout>
+    
+    </ScrollView>
+</LinearLayout>
+

@@ -7,10 +7,13 @@ import android.content.Context;
 public class Dispatcher extends PowerPanel {
 	
 	private Store store;
+	private Context context;
 	
 	public Dispatcher(Context context) {
+		this.context = context;
 		store = new Store(context);
 	}
+	
 	
 	public String computerCount() {
 		String count = store.computerCount();
@@ -23,6 +26,14 @@ public class Dispatcher extends PowerPanel {
 	
 	public void purgeDB() {
 		store.deleteAll();
+	}
+	
+	public void callSetTest() {
+		setTest("test");
+	}
+	
+	public void setTest(String text) {
+		super.updateTextView("status", text);
 	}
 	
 	public HashMap<String, String> getComputerList() {
