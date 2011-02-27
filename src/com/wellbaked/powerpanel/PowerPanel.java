@@ -34,7 +34,7 @@ public class PowerPanel extends ListActivity {
 	public static final int PURGE_DB = Menu.FIRST + 2; // Purge Database Menu Item
 	public static final int ADD_COMP = Menu.FIRST + 3; // Add Computer Menu Item
 	public String[] mockItems = {"Computer 1", "Computer 2", "Computer 3"};
-	public HashMap<String, String> allComputers;
+	public HashMap<String, Computer> allComputers;
 	public String[] listItems;
 	
 	// Override the oncreate method of the extended Activity
@@ -151,7 +151,7 @@ public class PowerPanel extends ListActivity {
 		Iterator<?> compsIterator = comps.iterator();
 		int i = 0;
 		while(compsIterator.hasNext()){
-			Map.Entry<String, String> mapping = (Map.Entry<String, String>) compsIterator.next();
+			Map.Entry<String, Computer> mapping = (Map.Entry<String, Computer>) compsIterator.next();
 		    items[i] = mapping.getKey().toString();
 		    i++;
 		}

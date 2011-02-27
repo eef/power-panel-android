@@ -36,7 +36,7 @@ public class Dispatcher extends PowerPanel {
 		super.updateTextView("status", text);
 	}
 	
-	public HashMap<String, String> getComputerList() {
+	public HashMap<String, Computer> getComputerList() {
 		return store.selectAll();
 	}
 
