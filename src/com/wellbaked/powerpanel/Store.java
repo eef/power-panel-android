@@ -43,13 +43,13 @@ public class Store {
    }
    
 
-   public HashMap<String, String> selectAll() {
-      HashMap<String, String> list = new HashMap<String, String>();
+   public HashMap<String, Computer> selectAll() {
+      HashMap<String, Computer> list = new HashMap<String, Computer>();
       Cursor cursor = this.db.query(TABLE_NAME, new String[] { "private_key, mac_address, host_name, os_info, display_name, last_ip" }, 
         null, null, null, null, "host_name desc");
       if (cursor.moveToFirst()) {
          do {
-        	 list.put(cursor.getString(0), cursor.getString(2));
+        	 list.put(cursor.getString(2), new Computer(cursor.getString(4), cursor.getString(2), cursor.getString(1), cursor.getString(5), cursor.getString(3), cursor.getString(0)));
          } while (cursor.moveToNext());
       }
       if (cursor != null && !cursor.isClosed()) {

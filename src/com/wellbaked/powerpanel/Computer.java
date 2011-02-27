@@ -4,24 +4,27 @@ import java.util.HashMap;
 
 public class Computer {
 	
-	private String display_name = "";
-	private String hostname = "";
-	private String mac_address = "";
-	private String last_ip = "";
-	private String os_info = "";
-	private String private_key = "";
-	private HashMap fields = new HashMap();
+	private HashMap<String, String> fields = new HashMap<String, String>();
 	
 	public Computer() {
-		
+		fields.put("display_name", "");
+		fields.put("hostname", "");
+		fields.put("mac_address", "");
+		fields.put("last_ip", "");
+		fields.put("os_info", "");
+		fields.put("private_key", "");
 	}
 	
-	public void setField() {
-		
+	public Computer(String display_name, String hostname, String mac_address, String last_ip, String os_information, String private_key) {
+		fields.put("display_name", display_name);
 	}
 	
-	public Computer getField() {
-		return new();
+	public void setField(String field, String value) {
+		fields.put(field, value);
+	}
+	
+	public String getField(String field) {
+		return fields.get(field);
 	}
 
 }
