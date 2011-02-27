@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,11 @@ public class PowerPanel extends ListActivity {
 		
 		// add computer
     }
+	
+	public void onListItemClick(ListView parent, View v, final int position,
+			long id) {
+		
+	}
 	
 	// Create menu
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,38 +117,6 @@ public class PowerPanel extends ListActivity {
 		updateTextView("computer_count", "Stored Computers: " + cc);
 	}
 	
-	private void showForm() {
-		LayoutInflater inflater = LayoutInflater.from(this);
-		View addView = inflater.inflate(R.layout.computer_form, null);
-		final ComputerForm wrapper = new ComputerForm(addView);
-		new AlertDialog.Builder(this).setTitle("Add Computer").setView(
-				addView).setPositiveButton("save",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						dispatcher.addComputer(wrapper.getField("private_key"), wrapper.getField("mac_address"), wrapper.getField("hostname"), "OSX", wrapper.getField("display_name"), wrapper.getField("last_ip"));
-						listSetup();
-						computerCount();
-					}
-				}).setNegativeButton("cancel",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						// ignore, just dismiss
-					}
-				}).show();
-	}
-	
-	/*
-	Add some mock data, this will generally be called
-	This is the structure we want to insert into the database.
-	The network class would ideally check for computers in the database, update the computer if found or create a new computer if its not
-	*/
-//	private void mockComputers() {
-//		dispatcher.addComputer("a", "aosdahsodad", "aosdhaosd", "asudahsd", "asodasdd", "asdasd");
-//		dispatcher.addComputer("b", "ahsodad", "aosd", "ahsd", "asdd", "ad");
-//		dispatcher.addComputer("c", "ahsodad", "aosd", "ahsd", "asdd", "ad");
-//		dispatcher.addComputer("d", "ahsodad", "aosd", "ahsd", "asdd", "ad");
-//	}
-	
 	// Class to create the list of computers on screen
 	class IconicAdapter extends ArrayAdapter {
 		@SuppressWarnings("unchecked")
@@ -192,6 +166,26 @@ public class PowerPanel extends ListActivity {
 			length = Toast.LENGTH_SHORT;
 		}
 		Toast.makeText(this, msg, length).show();
+	}
+	
+	private void showForm() {
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View addView = inflater.inflate(R.layout.computer_form, null);
+		final ComputerForm wrapper = new ComputerForm(addView);
+		new AlertDialog.Builder(this).setTitle("Add Computer").setView(
+				addView).setPositiveButton("save",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dispatcher.addComputer(wrapper.getField("private_key"), wrapper.getField("mac_address"), wrapper.getField("hostname"), "OSX", wrapper.getField("display_name"), wrapper.getField("last_ip"));
+						listSetup();
+						computerCount();
+					}
+				}).setNegativeButton("cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						// ignore, just dismiss
+					}
+				}).show();
 	}
 	
 	class ComputerForm {
