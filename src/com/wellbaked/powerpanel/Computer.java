@@ -15,8 +15,13 @@ public class Computer {
 		fields.put("private_key", "");
 	}
 	
-	public Computer(String display_name, String hostname, String mac_address, String last_ip, String os_information, String private_key) {
+	public Computer(String display_name, String hostname, String mac_address, String last_ip, String os_info, String private_key) {
 		fields.put("display_name", display_name);
+		fields.put("hostname", hostname);
+		fields.put("mac_address", mac_address);
+		fields.put("last_ip", last_ip);
+		fields.put("os_info", os_info);
+		fields.put("private_key", private_key);
 	}
 	
 	public void setField(String field, String value) {

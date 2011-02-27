@@ -49,7 +49,7 @@ public class Store {
         null, null, null, null, "host_name desc");
       if (cursor.moveToFirst()) {
          do {
-        	 list.put(cursor.getString(2), new Computer(cursor.getString(4), cursor.getString(2), cursor.getString(1), cursor.getString(5), cursor.getString(3), cursor.getString(0)));
+        	 list.put(cursor.getString(4), new Computer(cursor.getString(4), cursor.getString(2), cursor.getString(1), cursor.getString(5), cursor.getString(3), cursor.getString(0)));
          } while (cursor.moveToNext());
       }
       if (cursor != null && !cursor.isClosed()) {
