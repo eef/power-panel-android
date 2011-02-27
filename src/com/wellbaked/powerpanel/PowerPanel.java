@@ -3,16 +3,13 @@ package com.wellbaked.powerpanel;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -61,9 +58,9 @@ public class PowerPanel extends ListActivity {
 		// add computer
     }
 	
-	public void onListItemClick(ListView parent, View v, final int position,
-			long id) {
-		
+	public void onListItemClick(ListView parent, View v, final int position, long id) {
+		Computer computer = allComputers.get(this.listItems[position]);
+		makeToast(computer.getField("hostname"), true);
 	}
 	
 	// Create menu
@@ -193,7 +190,7 @@ public class PowerPanel extends ListActivity {
 		View base = null;
 		TextView label;
 		EditText input;
-		HashMap<String, Integer> form_fields = new HashMap();
+		HashMap<String, Integer> form_fields = new HashMap<String, Integer>();
 		ComputerForm(View base) {
 			this.base = base;
 			form_fields.put("display_name", R.id.display_name_input);
