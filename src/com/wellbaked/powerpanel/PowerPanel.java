@@ -34,6 +34,7 @@ public class PowerPanel extends ListActivity {
 	public String[] listItems;
 	public HashMap<String, String> computer = null;
 	public Computer computers;
+	private Boolean update = false;
 	
 	// Override the oncreate method of the extended Activity
 	@Override
@@ -163,6 +164,7 @@ public class PowerPanel extends ListActivity {
 		final ComputerForm wrapper = new ComputerForm(addView);
 		String title = "Add Computer";
 		if(this.computer != null) {
+			wrapper.update = true;
 			title = "Edit " + this.computer.get("display_name");
 			wrapper.setField("host_name", this.computer.get("host_name"));
 			wrapper.setField("private_key", this.computer.get("private_key"));
@@ -175,7 +177,14 @@ public class PowerPanel extends ListActivity {
 				addView).setPositiveButton("save",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						computers.insert(new String[] {wrapper.getField("private_key"), wrapper.getField("mac_address"), wrapper.getField("host_name"), "OSX", wrapper.getField("display_name"), wrapper.getField("last_ip")});
+						String[] attributes = {wrapper.getField("private_key"), wrapper.getField("mac_address"), wrapper.getField("host_name"), "OSX", wrapper.getField("display_name"), wrapper.getField("last_ip")};
+						if(wrapper.update) {
+							wrapper.update = false;
+							makeToast("Update would go", true);
+						} else {
+							makeToast("Adding computer", false);
+							computers.insert(attributes);
+						}
 						listSetup();
 						computerCount();
 					}
@@ -192,6 +201,7 @@ public class PowerPanel extends ListActivity {
 		View base = null;
 		TextView label;
 		EditText input;
+		public Boolean update = false;
 		HashMap<String, Integer> form_fields = new HashMap<String, Integer>();
 		ComputerForm(View base) {
 			this.base = base;
