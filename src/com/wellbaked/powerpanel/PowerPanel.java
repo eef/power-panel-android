@@ -20,12 +20,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Random;
 
 public class PowerPanel extends ListActivity {
 	
 	// Creation of variable which will be used
-	private Dispatcher dispatcher;
 	TextView text_view;
 	HashMap<String, Integer> tvList = new HashMap<String, Integer>();
 	public static final int SCAN = Menu.FIRST + 1; // Scan For Computers Menu Item
@@ -34,6 +32,7 @@ public class PowerPanel extends ListActivity {
 	public String[] mockItems = {"Computer 1", "Computer 2", "Computer 3"};
 	public HashMap<String, HashMap<String, String>> allComputers;
 	public String[] listItems;
+	public HashMap<String, String> computer = null;
 	public Computer computers;
 	
 	// Override the oncreate method of the extended Activity
@@ -42,26 +41,21 @@ public class PowerPanel extends ListActivity {
 		super.onCreate(icicle);
 		setContentView(R.layout.main);
 		
-		// The creation of the dispatcher, all UI events will call this
-		createDispatcher();
-		
 		// Create a list of text view objects which will be interacted with
 		tvs();
 		
 		// create a Computer class instance
 		this.computers = new Computer(this);
-		computers.deleteAll();
 		// update the computer count
 		computerCount();
 		
 		// Make the call to display the list
-		 listSetup();
-		
+		listSetup();
     }
 	
 	public void onListItemClick(ListView parent, View v, final int position, long id) {
-		// Computer computer = allComputers.get(this.listItems[position]);
-		// makeToast(computer.getField("hostname"), true);
+		this.computer = allComputers.get(this.listItems[position]);
+		showForm();
 	}
 	
 	// Create menu
@@ -79,27 +73,17 @@ public class PowerPanel extends ListActivity {
 			updateTextView("status", "Scan started");
 			return true;
 		case PURGE_DB:
-			dispatcher.purgeDB();
-			//computerCount();
+			computers.deleteAll();
+			computerCount();
 			listSetup();
 			updateTextView("status", "Purged Database");
 			return true;
 		case ADD_COMP:
 			// load the add computer class
-			// showForm();
-			Random randomGenerator = new Random();
-			String t = "object" + Integer.toString(randomGenerator.nextInt(100));
-			computers.insert(new String[] {t,t,t,t,t,t});
-			listSetup();
-			computerCount();
+			showForm();
 			return true;
 		}
 		return false;
-	}
-    
-	// Method to create an instance of the dispatcher class
-	private void createDispatcher() {
-		dispatcher = new Dispatcher(this);
 	}
 
 	// We created a hash map of view objects.  String => Integer
@@ -148,10 +132,7 @@ public class PowerPanel extends ListActivity {
 	// Map the returned hash map from selecting all the computers into a array of keys
 	// We can the reference the allcomputers hash went we perform actions
 	private String[] listItems() {
-		// allComputers = dispatcher.getComputerList();
 		allComputers = this.computers.all();
-		System.out.println("SIZE =====");
-		System.out.println(computers.count());
 		String[] items = new String[Integer.parseInt(computers.count())];
 		Set<?> comps = allComputers.entrySet();
 		Iterator<?> compsIterator = comps.iterator();
@@ -180,13 +161,23 @@ public class PowerPanel extends ListActivity {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		View addView = inflater.inflate(R.layout.computer_form, null);
 		final ComputerForm wrapper = new ComputerForm(addView);
-		new AlertDialog.Builder(this).setTitle("Add Computer").setView(
+		String title = "Add Computer";
+		if(this.computer != null) {
+			title = "Edit " + this.computer.get("display_name");
+			wrapper.setField("host_name", this.computer.get("host_name"));
+			wrapper.setField("private_key", this.computer.get("private_key"));
+			wrapper.setField("display_name", this.computer.get("display_name"));
+			wrapper.setField("last_ip", this.computer.get("last_ip"));
+			wrapper.setField("mac_address", this.computer.get("mac_address"));
+		}
+		this.computer = null;
+		new AlertDialog.Builder(this).setTitle(title).setView(
 				addView).setPositiveButton("save",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						computers.insert(new String[] {wrapper.getField("private_key"), wrapper.getField("mac_address"), wrapper.getField("hostname"), "OSX", wrapper.getField("display_name"), wrapper.getField("last_ip")});
+						computers.insert(new String[] {wrapper.getField("private_key"), wrapper.getField("mac_address"), wrapper.getField("host_name"), "OSX", wrapper.getField("display_name"), wrapper.getField("last_ip")});
 						listSetup();
-						// computerCount();
+						computerCount();
 					}
 				}).setNegativeButton("cancel",
 				new DialogInterface.OnClickListener() {
@@ -205,7 +196,7 @@ public class PowerPanel extends ListActivity {
 		ComputerForm(View base) {
 			this.base = base;
 			form_fields.put("display_name", R.id.display_name_input);
-			form_fields.put("hostname", R.id.hostname_input);
+			form_fields.put("host_name", R.id.hostname_input);
 			form_fields.put("last_ip", R.id.last_ip);
 			form_fields.put("mac_address", R.id.mac_address_input);
 			form_fields.put("private_key", R.id.private_key_input);
@@ -214,6 +205,11 @@ public class PowerPanel extends ListActivity {
 		public String getField(String field) {
 			input = (EditText) this.base.findViewById(form_fields.get(field));
 			return input.getText().toString();
+		}
+		
+		public void setField(String field, String value) {
+			input = (EditText) this.base.findViewById(form_fields.get(field));
+			input.setText(value);
 		}
 	}
 }

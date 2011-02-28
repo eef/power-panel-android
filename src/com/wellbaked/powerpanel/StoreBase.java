@@ -61,9 +61,7 @@ public class StoreBase {
 		Integer no_values = values.length;
 		for(Integer i = 1; i <= no_values; i++) {
 			this.insertStmt.bindString(i, values[i-1]);
-			System.out.println("======= INSERT STATEMENT" + this.insertStmt.toString());
 		}
-		System.out.println("======= INSERT STATEMENT" + this.insertStmt.toString());
 	    return this.insertStmt.executeInsert();
 	}
 	
