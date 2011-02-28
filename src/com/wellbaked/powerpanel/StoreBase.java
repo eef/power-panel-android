@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDoneException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
@@ -56,12 +57,6 @@ public class StoreBase {
 	}
 	
 	public long save(ContentValues values) {
-//		this.insertStmt = this.db.compileStatement(this.insert);
-//		Integer no_values = values.length;
-//		for(Integer i = 1; i <= no_values; i++) {
-//			this.insertStmt.bindString(i, values[i-1]);
-//		}
-//	    return this.insertStmt.executeInsert();
 		long id = this.db.insert(this.table, null, values);
 		return id;
 	}
@@ -110,6 +105,18 @@ public class StoreBase {
 	
 	public void destroy(String id) {
 		this.db.delete(this.table, "id=?", new String[] {id});
+	}
+	
+	public Boolean recordExists(String field, String value) {
+		Boolean exists = false;
+		SQLiteStatement sta = this.db.compileStatement("SELECT * FROM " + this.table + "where " + field + " = " + value);
+		try {
+			sta.simpleQueryForString();
+			exists = true;
+		} catch(SQLiteDoneException e) {
+			exists = false;
+		}
+		return exists;
 	}
 	
 	public void create() {
