@@ -2,6 +2,7 @@ package com.wellbaked.powerpanel;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,7 +35,7 @@ public class PowerPanel extends ListActivity {
 	public String[] listItems;
 	public HashMap<String, String> computer = null;
 	public Computer computers;
-	private Boolean update = false;
+	ContentValues attributes = new ContentValues();
 	
 	// Override the oncreate method of the extended Activity
 	@Override
@@ -106,8 +107,7 @@ public class PowerPanel extends ListActivity {
 	}
 	
 	// Class to create the list of computers on screen
-	class IconicAdapter extends ArrayAdapter {
-		@SuppressWarnings("unchecked")
+	class IconicAdapter extends ArrayAdapter<Object> {
 		IconicAdapter() {
 			super(PowerPanel.this, R.layout.row, listItems);
 		}
@@ -133,12 +133,13 @@ public class PowerPanel extends ListActivity {
 	// Map the returned hash map from selecting all the computers into a array of keys
 	// We can the reference the allcomputers hash went we perform actions
 	private String[] listItems() {
-		allComputers = this.computers.all();
+		allComputers = this.computers.all("display_name");
 		String[] items = new String[Integer.parseInt(computers.count())];
 		Set<?> comps = allComputers.entrySet();
 		Iterator<?> compsIterator = comps.iterator();
 		int i = 0;
 		while(compsIterator.hasNext()){
+			@SuppressWarnings("unchecked")
 			Map.Entry<String, HashMap<String, String>> mapping = (Map.Entry<String, HashMap<String, String>>) compsIterator.next();
 			String name = mapping.getKey().toString();
 			System.out.println(name);
@@ -165,25 +166,26 @@ public class PowerPanel extends ListActivity {
 		String title = "Add Computer";
 		if(this.computer != null) {
 			wrapper.update = true;
+			wrapper.id = this.computer.get("id");
 			title = "Edit " + this.computer.get("display_name");
 			wrapper.setField("host_name", this.computer.get("host_name"));
 			wrapper.setField("private_key", this.computer.get("private_key"));
 			wrapper.setField("display_name", this.computer.get("display_name"));
 			wrapper.setField("last_ip", this.computer.get("last_ip"));
 			wrapper.setField("mac_address", this.computer.get("mac_address"));
+			this.computer = null;
 		}
-		this.computer = null;
 		new AlertDialog.Builder(this).setTitle(title).setView(
 				addView).setPositiveButton("save",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						String[] attributes = {wrapper.getField("private_key"), wrapper.getField("mac_address"), wrapper.getField("host_name"), "OSX", wrapper.getField("display_name"), wrapper.getField("last_ip")};
 						if(wrapper.update) {
 							wrapper.update = false;
-							makeToast("Update would go", true);
+							Long st = computers.update(wrapper.id, wrapper.attributes());
+							makeToast(Long.toString(st), true);
 						} else {
-							makeToast("Adding computer", false);
-							computers.insert(attributes);
+							Long st = computers.save(wrapper.attributes());
+							makeToast(Long.toString(st), true);
 						}
 						listSetup();
 						computerCount();
@@ -202,6 +204,7 @@ public class PowerPanel extends ListActivity {
 		TextView label;
 		EditText input;
 		public Boolean update = false;
+		public String id;
 		HashMap<String, Integer> form_fields = new HashMap<String, Integer>();
 		ComputerForm(View base) {
 			this.base = base;
@@ -220,6 +223,17 @@ public class PowerPanel extends ListActivity {
 		public void setField(String field, String value) {
 			input = (EditText) this.base.findViewById(form_fields.get(field));
 			input.setText(value);
+		}
+		
+		public ContentValues attributes() {
+			ContentValues ret = new ContentValues();
+			ret.put("private_key", getField("private_key"));
+			ret.put("mac_address", getField("mac_address"));
+			ret.put("host_name", getField("host_name"));
+			ret.put("os_info", "Windows");
+			ret.put("display_name", getField("display_name"));
+			ret.put("last_ip", getField("last_ip"));
+			return ret;
 		}
 	}
 }
