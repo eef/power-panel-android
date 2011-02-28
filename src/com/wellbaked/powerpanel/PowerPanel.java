@@ -184,7 +184,7 @@ public class PowerPanel extends ListActivity {
 				addView).setPositiveButton("save",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						dispatcher.addComputer(wrapper.getField("private_key"), wrapper.getField("mac_address"), wrapper.getField("hostname"), "OSX", wrapper.getField("display_name"), wrapper.getField("last_ip"));
+						computers.insert(new String[] {wrapper.getField("private_key"), wrapper.getField("mac_address"), wrapper.getField("hostname"), "OSX", wrapper.getField("display_name"), wrapper.getField("last_ip")});
 						listSetup();
 						// computerCount();
 					}
