@@ -50,7 +50,11 @@ public class PowerPanel extends ListActivity {
 		this.computers = new Computer(this);
 		// update the computer count
 		computerCount();
-		this.computers.recordExists("private_key", "yer maw has baws");
+		if(this.computers.recordExists("private_key", "yer maw has baws")) {
+			System.out.println("Yas this record exists");
+		} else {
+			System.out.println("Nae record");
+		}
 		// Make the call to display the list
 		listSetup();
     }
