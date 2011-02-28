@@ -3,6 +3,7 @@ package com.wellbaked.powerpanel;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,11 +32,12 @@ public class PowerPanel extends ListActivity {
 	public static final int PURGE_DB = Menu.FIRST + 2; // Purge Database Menu Item
 	public static final int ADD_COMP = Menu.FIRST + 3; // Add Computer Menu Item
 	public String[] mockItems = {"Computer 1", "Computer 2", "Computer 3"};
-	public HashMap<String, HashMap<String, String>> allComputers;
+	public HashMap<String, Computer> allComputers;
 	public String[] listItems;
-	public HashMap<String, String> computer = null;
+	public Computer computer = null;
 	public Computer computers;
 	ContentValues attributes = new ContentValues();
+	String form_title = "Add Computer";
 	
 	// Override the oncreate method of the extended Activity
 	@Override
@@ -144,7 +146,7 @@ public class PowerPanel extends ListActivity {
 		int i = 0;
 		while(compsIterator.hasNext()){
 			@SuppressWarnings("unchecked")
-			Map.Entry<String, HashMap<String, String>> mapping = (Map.Entry<String, HashMap<String, String>>) compsIterator.next();
+			Map.Entry<String, Computer> mapping = (Map.Entry<String, Computer>) compsIterator.next();
 			String name = mapping.getKey().toString();
 			System.out.println(name);
 		    items[i] = name;
@@ -167,29 +169,22 @@ public class PowerPanel extends ListActivity {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		View addView = inflater.inflate(R.layout.computer_form, null);
 		final ComputerForm wrapper = new ComputerForm(addView);
-		String title = "Add Computer";
 		if(this.computer != null) {
-			wrapper.update = true;
-			wrapper.id = this.computer.get("id");
-			title = "Edit " + this.computer.get("display_name");
-			wrapper.setField("host_name", this.computer.get("host_name"));
-			wrapper.setField("private_key", this.computer.get("private_key"));
-			wrapper.setField("display_name", this.computer.get("display_name"));
-			wrapper.setField("last_ip", this.computer.get("last_ip"));
-			wrapper.setField("mac_address", this.computer.get("mac_address"));
-			this.computer = null;
+			populateComputerForm(wrapper);			
 		}
-		new AlertDialog.Builder(this).setTitle(title).setView(
+		new AlertDialog.Builder(this).setTitle(this.form_title).setView(
 				addView).setPositiveButton("save",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						if(wrapper.update) {
 							wrapper.update = false;
-							Long st = computers.update(wrapper.id, wrapper.attributes());
-							makeToast(Long.toString(st), true);
+							boolean st = wrapper.computer.update();
+							makeToast(Boolean.toString(st), true);
 						} else {
-							Long st = computers.save(wrapper.attributes());
-							makeToast(Long.toString(st), true);
+							wrapper.computer.setField("private_key", wrapper.getField("private_key"));
+							wrapper.computer.setField("display_name", "Muttha Fukka");
+							Boolean st = wrapper.computer.save();
+							makeToast(Boolean.toString(st), true);
 						}
 						listSetup();
 						computerCount();
@@ -202,6 +197,18 @@ public class PowerPanel extends ListActivity {
 				}).show();
 	}
 	
+	private void populateComputerForm(ComputerForm wrapper) {
+		wrapper.update = true;
+		wrapper.computer = this.computer;
+		wrapper.id = this.computer.getField("id");
+		this.form_title = "Edit " + this.computer.getField("display_name");
+		wrapper.setField("host_name", this.computer.getField("host_name"));
+		wrapper.setField("private_key", this.computer.getField("private_key"));
+		wrapper.setField("display_name", this.computer.getField("display_name"));
+		wrapper.setField("last_ip", this.computer.getField("last_ip"));
+		wrapper.setField("mac_address", this.computer.getField("mac_address"));
+	}
+	
 	class ComputerForm {
 
 		View base = null;
@@ -209,9 +216,13 @@ public class PowerPanel extends ListActivity {
 		EditText input;
 		public Boolean update = false;
 		public String id;
+		public Context p_context;
+		public Computer computer;
 		HashMap<String, Integer> form_fields = new HashMap<String, Integer>();
 		ComputerForm(View base) {
 			this.base = base;
+			this.p_context = this.base.getContext();
+			computer = new Computer(this.p_context);
 			form_fields.put("display_name", R.id.display_name_input);
 			form_fields.put("host_name", R.id.hostname_input);
 			form_fields.put("last_ip", R.id.last_ip);

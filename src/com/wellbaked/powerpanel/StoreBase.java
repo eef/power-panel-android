@@ -56,25 +56,19 @@ public class StoreBase {
 		return ret;
 	}
 	
-	public long save(ContentValues values) {
+	public long insert(ContentValues values) {
 		long id = this.db.insert(this.table, null, values);
 		return id;
 	}
 	
-	/**
-	 * 
-	 * @param key_name this is the name of the column which will be used as the key name
-	 * @return HashMap containing a mapping of key_name => hash map field name => field value
-	 */
-	public HashMap<String, HashMap<String, String>> all(String key_name) {
-		HashMap<String, HashMap<String, String>> ret = new HashMap<String, HashMap<String, String>>();
+	public HashMap<String, Computer> all(String key_name) {
+		HashMap<String, Computer> ret = new HashMap<String, Computer>();
 		Cursor result = this.db.query(this.table, this.columns, null, null, null, null, null);
 		column_count = result.getColumnCount();
 	    if (result.moveToFirst()) {
 	    	do {
-	    		HashMap<String, String> fields = parseFields(result);
 	    		Integer key_column_index = result.getColumnIndex(key_name);
- 	    		ret.put(result.getString(key_column_index), fields);
+ 	    		ret.put(result.getString(key_column_index), new Computer(this.context, result.getString(0), result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5)));
 	    	} while (result.moveToNext());
 	    }
 	    if (result != null && !result.isClosed()) {
@@ -109,7 +103,7 @@ public class StoreBase {
 	
 	public Boolean recordExists(String field, String value) {
 		Boolean exists = false;
-		SQLiteStatement sta = this.db.compileStatement("SELECT * FROM " + this.table + "where " + field + " = " + value);
+		SQLiteStatement sta = this.db.compileStatement("SELECT * FROM " + this.table + " where " + field + " = '" + value + "'");
 		try {
 			sta.simpleQueryForString();
 			exists = true;
