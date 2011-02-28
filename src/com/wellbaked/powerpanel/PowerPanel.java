@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Random;
 
 public class PowerPanel extends ListActivity {
 	
@@ -31,8 +32,9 @@ public class PowerPanel extends ListActivity {
 	public static final int PURGE_DB = Menu.FIRST + 2; // Purge Database Menu Item
 	public static final int ADD_COMP = Menu.FIRST + 3; // Add Computer Menu Item
 	public String[] mockItems = {"Computer 1", "Computer 2", "Computer 3"};
-	public HashMap<String, Computer> allComputers;
+	public HashMap<String, HashMap<String, String>> allComputers;
 	public String[] listItems;
+	public Computer computers;
 	
 	// Override the oncreate method of the extended Activity
 	@Override
@@ -46,21 +48,20 @@ public class PowerPanel extends ListActivity {
 		// Create a list of text view objects which will be interacted with
 		tvs();
 		
-		// Add mock data
-		// mockComputers(); // Uncomment this to add more mock computers
-		
-		// Testing get computer count
+		// create a Computer class instance
+		this.computers = new Computer(this);
+		computers.deleteAll();
+		// update the computer count
 		computerCount();
 		
 		// Make the call to display the list
-		listSetup();
+		 listSetup();
 		
-		// add computer
     }
 	
 	public void onListItemClick(ListView parent, View v, final int position, long id) {
-		Computer computer = allComputers.get(this.listItems[position]);
-		makeToast(computer.getField("hostname"), true);
+		// Computer computer = allComputers.get(this.listItems[position]);
+		// makeToast(computer.getField("hostname"), true);
 	}
 	
 	// Create menu
@@ -79,13 +80,18 @@ public class PowerPanel extends ListActivity {
 			return true;
 		case PURGE_DB:
 			dispatcher.purgeDB();
-			computerCount();
+			//computerCount();
 			listSetup();
 			updateTextView("status", "Purged Database");
 			return true;
 		case ADD_COMP:
 			// load the add computer class
-			showForm();
+			// showForm();
+			Random randomGenerator = new Random();
+			String t = "object" + Integer.toString(randomGenerator.nextInt(100));
+			computers.insert(new String[] {t,t,t,t,t,t});
+			listSetup();
+			computerCount();
 			return true;
 		}
 		return false;
@@ -110,7 +116,7 @@ public class PowerPanel extends ListActivity {
 	
 	// Get the number of computers stored and display it
 	private void computerCount() {
-		String cc = dispatcher.computerCount();
+		String cc = computers.count();
 		updateTextView("computer_count", "Stored Computers: " + cc);
 	}
 	
@@ -142,14 +148,19 @@ public class PowerPanel extends ListActivity {
 	// Map the returned hash map from selecting all the computers into a array of keys
 	// We can the reference the allcomputers hash went we perform actions
 	private String[] listItems() {
-		allComputers = dispatcher.getComputerList();
-		String[] items = new String[allComputers.size()];
+		// allComputers = dispatcher.getComputerList();
+		allComputers = this.computers.all();
+		System.out.println("SIZE =====");
+		System.out.println(computers.count());
+		String[] items = new String[Integer.parseInt(computers.count())];
 		Set<?> comps = allComputers.entrySet();
 		Iterator<?> compsIterator = comps.iterator();
 		int i = 0;
 		while(compsIterator.hasNext()){
-			Map.Entry<String, Computer> mapping = (Map.Entry<String, Computer>) compsIterator.next();
-		    items[i] = mapping.getKey().toString();
+			Map.Entry<String, HashMap<String, String>> mapping = (Map.Entry<String, HashMap<String, String>>) compsIterator.next();
+			String name = mapping.getKey().toString();
+			System.out.println(name);
+		    items[i] = name;
 		    i++;
 		}
 		return items;
@@ -175,7 +186,7 @@ public class PowerPanel extends ListActivity {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						dispatcher.addComputer(wrapper.getField("private_key"), wrapper.getField("mac_address"), wrapper.getField("hostname"), "OSX", wrapper.getField("display_name"), wrapper.getField("last_ip"));
 						listSetup();
-						computerCount();
+						// computerCount();
 					}
 				}).setNegativeButton("cancel",
 				new DialogInterface.OnClickListener() {
