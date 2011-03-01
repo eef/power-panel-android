@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class PowerPanel extends ListActivity {
+public class PowerPanel extends ListActivity implements TransportListener {
 	
 	// Creation of variable which will be used
 	TextView text_view;
@@ -82,7 +82,7 @@ public class PowerPanel extends ListActivity {
 		switch (item.getItemId()) {
 		case SCAN:
 			updateTextView("status", "Scan started");
-			Transport transport = new Transport();
+			Transport transport = new Transport(this);
 			transport.execute();
 			return true;
 		case PURGE_DB:
@@ -255,5 +255,15 @@ public class PowerPanel extends ListActivity {
 			ret.put("last_ip", getField("last_ip"));
 			return ret;
 		}
+	}
+
+	@Override
+	public void onTransportComplete(String response) {
+		makeToast(response.trim(), true);
+	}
+
+	@Override
+	public void onTransportCancel() {
+		
 	}
 }

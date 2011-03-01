@@ -20,16 +20,24 @@ import org.apache.http.params.HttpProtocolParams;
 
 import android.os.AsyncTask;
 
-public class Transport extends AsyncTask<Void, Void, Void> {
+public class Transport extends AsyncTask<String, Void, String> {
+	
+	String ret;
+	
+	TransportListener transport_listener = null;
+	 
+	public Transport(TransportListener listener) {
+		this.transport_listener = listener;
+	}
 	
 	@Override
-	protected Void doInBackground(Void... unused) {
+	protected String doInBackground(String... args) {
 		DefaultHttpClient client = getClient();
 		String url = "http://192.168.0.100";
 		HttpGet request = new HttpGet(url);
 		try {
 			HttpResponse response = client.execute(request);
-			System.out.println(parseResponse(response));
+			ret = parseResponse(response);
 		} catch (ClientProtocolException e) {
 			System.out.println("=================== ClientProtocolException");
 			e.printStackTrace();
@@ -37,8 +45,12 @@ public class Transport extends AsyncTask<Void, Void, Void> {
 			System.out.println("=================== IOException");
 			e.printStackTrace();
 		}
-		return null;
+		return ret;
 	}
+	
+	 protected void onPostExecute(final String response) {
+		 transport_listener.onTransportComplete(response);
+	 }
 	
 	
 	public String parseResponse(HttpResponse response){
