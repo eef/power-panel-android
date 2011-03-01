@@ -37,7 +37,7 @@ public class Transport extends AsyncTask<Void, Void, Void> {
 			System.out.println("=================== IOException");
 			e.printStackTrace();
 		}
-		return "";
+		return null;
 	}
 	
 	
