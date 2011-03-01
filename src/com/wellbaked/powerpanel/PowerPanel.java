@@ -38,6 +38,9 @@ public class PowerPanel extends ListActivity implements TransportListener {
 	public Computer computers;
 	ContentValues attributes = new ContentValues();
 	String form_title = "Add Computer";
+	private Transport transport;
+	ComputerForm wrapper;
+	View addView;
 	
 	// Override the oncreate method of the extended Activity
 	@Override
@@ -50,7 +53,11 @@ public class PowerPanel extends ListActivity implements TransportListener {
 		
 		// create a Computer class instance
 		this.computers = new Computer(this);
-		
+		DefaultResponseParser responseParser = new DefaultResponseParser();
+        this.transport = new Transport(this, responseParser, new DefaultClientFactory());
+        LayoutInflater inflater = LayoutInflater.from(this);
+		this.addView = inflater.inflate(R.layout.computer_form, null);
+		this.wrapper = new ComputerForm(addView);
 		// update the computer count
 		computerCount();
 		
@@ -82,8 +89,6 @@ public class PowerPanel extends ListActivity implements TransportListener {
 		switch (item.getItemId()) {
 		case SCAN:
 			updateTextView("status", "Scan started");
-            DefaultResponseParser responseParser = new DefaultResponseParser();
-            Transport transport = new Transport(this, responseParser, new DefaultClientFactory());
 			transport.execute();
 			return true;
 		case PURGE_DB:
@@ -172,9 +177,6 @@ public class PowerPanel extends ListActivity implements TransportListener {
 	}
 	
 	private void showForm() {
-		LayoutInflater inflater = LayoutInflater.from(this);
-		View addView = inflater.inflate(R.layout.computer_form, null);
-		final ComputerForm wrapper = new ComputerForm(addView);
 		if(this.computer != null) {
 			populateComputerForm(wrapper);			
 		}
