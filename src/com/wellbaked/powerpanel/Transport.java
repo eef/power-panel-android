@@ -1,4 +1,4 @@
-package com.wellbaked.powerpanel;
+	package com.wellbaked.powerpanel;
 
 import java.io.IOException;
 import org.apache.http.HttpResponse;
@@ -30,10 +30,8 @@ public class Transport extends AsyncTask<String, Void, String> {
 			HttpResponse response = client.execute(request);
 			ret = responseParser.parseResponse(response);
 		} catch (ClientProtocolException e) {
-			System.out.println("=================== ClientProtocolException");
 			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("=================== IOException");
 			e.printStackTrace();
 		}
 		return ret;
