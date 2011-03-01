@@ -82,7 +82,8 @@ public class PowerPanel extends ListActivity implements TransportListener {
 		switch (item.getItemId()) {
 		case SCAN:
 			updateTextView("status", "Scan started");
-			Transport transport = new Transport(this);
+            DefaultResponseParser responseParser = new DefaultResponseParser();
+            Transport transport = new Transport(this, responseParser, new DefaultClientFactory());
 			transport.execute();
 			return true;
 		case PURGE_DB:
