@@ -257,12 +257,10 @@ public class PowerPanel extends ListActivity implements TransportListener {
 		}
 	}
 
-	@Override
 	public void onTransportComplete(String response) {
 		makeToast(response.trim(), true);
 	}
 
-	@Override
 	public void onTransportCancel() {
 		
 	}
