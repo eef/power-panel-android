@@ -82,6 +82,8 @@ public class PowerPanel extends ListActivity {
 		switch (item.getItemId()) {
 		case SCAN:
 			updateTextView("status", "Scan started");
+			Transport transport = new Transport();
+			transport.execute();
 			return true;
 		case PURGE_DB:
 			computers.deleteAll();
